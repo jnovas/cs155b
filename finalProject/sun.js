@@ -79,7 +79,7 @@
     }
 
     function initLight1(){
-      light1 = new THREE.SpotLight( 0xffffff);
+      light1 = new THREE.PointLight( 0xffffff);
       light1.position.set( 0,40,0);               // Move the light "up" 40 units
       // light1.castShadow = true;                   // Ensure the spotlight casts a shadow
       scene.add( light1 );
