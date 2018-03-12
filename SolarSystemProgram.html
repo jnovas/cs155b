@@ -20,6 +20,9 @@
     <script type="text/javascript" src="../RenderPass.js"></script>
     <script type="text/javascript" src="../SavePass.js"></script>
     <script type="text/javascript" src="../TexturePass.js"></script>
+    <script type="text/javascript" src="threex.dilategeometry.js"></script>
+		<script type="text/javascript" src="threex.atmospherematerial.js"></script>
+		<script type="text/javascript "src="threex.geometricglowmesh.js"></script>
 
     <style>
         body {
@@ -55,6 +58,7 @@
         var sceneMercury = new THREE.Scene(); //7
         var sceneSaturn = new THREE.Scene(); //8
         var sceneNeptune = new THREE.Scene(); //9
+    //    var sceneStar = new THREE.Scene();//10
 
         var sceneBG = new THREE.Scene();
 
@@ -94,6 +98,16 @@
         sphere8.position.z = 120;
         var sphere9 = createNeptuneMesh(new THREE.SphereGeometry(5, 40, 40));
         sphere9.position.x = 150;
+        /**
+        TIRTHO
+        var star = createStarMesh(new THREE.SphereGeometry(1, 8, 6));
+        star.position.x = ( Math.random() - 0.5 ) * 1000;
+				star.position.y = ( Math.random() - 0.5 ) * 1000;
+				star.position.z = ( Math.random() - 0.5 ) * 1000;
+        */
+
+
+
 
         sceneEarth.add(sphere);
         sceneMars.add(sphere2);
@@ -104,6 +118,7 @@
         sceneMercury.add(sphere7);
         sceneSaturn.add(sphere8);
         sceneNeptune.add(sphere9);
+      // TIRTHO  sceneStar.add(star);
 
         // position and point the camera to the center of the scene
         camera.position.x = -10;
@@ -137,6 +152,7 @@
         sceneMercury.add(ambi7);
         sceneSaturn.add(ambi8);
         sceneNeptune.add(ambi9);
+
 
         var spotLight = new THREE.DirectionalLight(0xffffff);
         spotLight.position.set(550, 100, 550);
@@ -174,6 +190,13 @@
         spotLight.position.set(550, 100, 550);
         spotLight.intensity = 0.6;
 
+      /**
+      TIRTHO
+        var spotLight10 = new THREE.DirectionalLight(0xffffff);
+        spotLight.position.set(550, 100, 550);
+        spotLight.intensity = 0.6;
+        */
+
         sceneEarth.add(spotLight);
         sceneMars.add(spotLight2);
         sceneSun.add(spotLight3);
@@ -183,6 +206,7 @@
         sceneMercury.add(spotLight7);
         sceneSaturn.add(spotLight8);
         sceneNeptune.add(spotLight9);
+      //  sceneStar.add(spotLight10);
 
         var materialColor = new THREE.MeshBasicMaterial({
             map: THREE.ImageUtils.loadTexture("../starry-deep-outer-space-galaxy.jpg"),
@@ -208,7 +232,7 @@
         var renderPass3 = new THREE.RenderPass(sceneSun, camera);
         renderPass3.clear = false;
 
-		var renderPass4 = new THREE.RenderPass(sceneVenus, camera);
+		    var renderPass4 = new THREE.RenderPass(sceneVenus, camera);
         renderPass4.clear = false;
 
         var renderPass5 = new THREE.RenderPass(sceneJupiter, camera);
@@ -235,13 +259,13 @@
         var clearMask = new THREE.ClearMaskPass();
         var earthMask = new THREE.MaskPass(sceneEarth, camera);
         var marsMask = new THREE.MaskPass(sceneMars, camera);
-   		var sunMask = new THREE.MaskPass(sceneSun, camera);
+   		  var sunMask = new THREE.MaskPass(sceneSun, camera);
         var venusMask = new THREE.MaskPass(sceneVenus, camera);
         var jupiterMask = new THREE.MaskPass(sceneJupiter, camera);
-		var uranusMask = new THREE.MaskPass(sceneUranus, camera);
+		    var uranusMask = new THREE.MaskPass(sceneUranus, camera);
         var mercuryMask = new THREE.MaskPass(sceneMercury, camera);
         var saturnMask = new THREE.MaskPass(sceneSaturn, camera);
-		var neptuneMask = new THREE.MaskPass(sceneNeptune, camera);
+		    var neptuneMask = new THREE.MaskPass(sceneNeptune, camera);
 
         var composer = new THREE.EffectComposer(webGLRenderer);
         composer.renderTarget1.stencilBuffer = true;
@@ -365,6 +389,26 @@
             var mesh = THREE.SceneUtils.createMultiMaterialObject(geom, [planetMaterial]);
             return mesh;
         }
+/**
+  TIRTHO
+        function createStarMesh(geom){
+            for ( var i = 0; i < 500; i ++ ) {
+                var star_material = new THREE.MeshBasicMaterial( { color: 0xffffe6, flatShading: true } );
+                var mesh = new THREE.Mesh(geom, [star_material]);
+              //  var glowMesh	= new THREEx.GeometricGlowMesh(mesh); mesh.add(glowMesh.object3d);
+              //  var insideUniforms	= glowMesh.insideMesh.material.uniforms
+              //  insideUniforms.glowColor.value.set('white')
+              //  var outsideUniforms	= glowMesh.outsideMesh.material.uniforms
+              //  outsideUniforms.glowColor.value.set('white')
+              //  mesh.add(glowMesh);
+                mesh.updateMatrix();
+                mesh.matrixAutoUpdate = false;
+                //scene.add( mesh );
+                return mesh;
+            }
+
+        }
+  */
 
         function render() {
 
