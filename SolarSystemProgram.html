@@ -71,6 +71,7 @@
 
         var sphere = createSunMesh(new THREE.SphereGeometry(5, 40, 40));
         sphere.position.x = -10;
+        sphere.add(createSunGlow());
         var sphere2 = createMercuryMesh(new THREE.SphereGeometry(1, 40, 40));
         sphere2.position.x = 10;
         var sphere3 = createVenusMesh(new THREE.SphereGeometry(1.5, 40, 40));
@@ -281,7 +282,7 @@
         function createEarthMesh(geom) {
             var planetTexture = THREE.ImageUtils.loadTexture("../earth.png");
             var planetMaterial = new THREE.MeshPhongMaterial();
-            planetMaterial.map = planetTexture;         
+            planetMaterial.map = planetTexture;
             // create a multimaterial
             var mesh = THREE.SceneUtils.createMultiMaterialObject(geom, [planetMaterial]);
             return mesh;
@@ -295,6 +296,20 @@
             var mesh = THREE.SceneUtils.createMultiMaterialObject(geom, [planetMaterial]);
             return mesh;
         }
+
+        function createSunGlow() {
+          var spriteMaterial = new THREE.SpriteMaterial( {
+            map: new THREE.ImageUtils.loadTexture('../glow.png'),
+            useScreenCoordinates: false,
+            color: 0xff8300,
+            depthWrite: false,
+            transparent: false,
+            blending: THREE.AdditiveBlending
+          })
+          var sprite = new THREE.Sprite(spriteMaterial);
+          sprite.scale.set(50,50,1);
+          return sprite;
+    }
 
         function createVenusMesh(geom) {
             var planetTexture = THREE.ImageUtils.loadTexture("../venus.jpg");
