@@ -16,6 +16,7 @@ The user moves a cube around the board trying to knock balls into a cone
 	var cone;
 	var npc;
 	var avatar;
+	var villain;
 
 	var endScene, endCamera, endText;
 
@@ -113,10 +114,71 @@ The user moves a cube around the board trying to knock balls into a cone
       })
 			scene.add(npc);
 
+			var villain = new Physijs.SphereMesh(
+    new THREE.SphereGeometry( 3 ),
+    new THREE.MeshLambertMaterial({ color: 0x4286f4 })
+);
+				//villain = createBoxMesh2(0x0000ff,1,2,4);
+				villain.position.set(randN(20)+15,10,randN(20)+15);
+	      villain.addEventListener('collision',function(other_object){
+	        if (villain==avatar){
+	          gameState.health--;
+						villain.__dirtyPosition = true;
+						villain.position.set(randN(50),10,randN(50));
+	        }
+	      })
+				scene.add(villain);
+
+
+
+
       var wall = createWall(0xffaa00,50,3,1);
       wall.position.set(10,0,10);
       scene.add(wall);
-	}
+		}
+
+		function updatevillain(){
+			villain.lookAt(avatar.position);
+		  //npc.__dirtyPosition = true;
+			villain.setLinearVelocity(villain.getWorldDirection().multiplyScalar(1.5));
+		}
+
+
+// function createVillain(){
+// 	var loader = new THREE.JSONLoader();
+// 	loader.load("/models/suzanne.json",
+// 		function(geometry, materials) {
+// 			console.log("loading monkey");
+// 			var vmaterial = new THREE.MeshLambertMaterial( {color: 0x0000ff });
+// 			var pmaterial = new Physijs.createMaterial(vmaterial, 0.9, 0.5);
+// 			villain = new Physijs.BoxMesh(geometry, pmaterial);
+// 			console.log("created monkeyAvatar mesh");
+// 			villain.setDamping(0.1,0.1);
+// 			villain.castShadow = true;
+//
+// 			// avatarCam.position.set(0,4,0);
+// 			// avatarCam.lookAt(0,4,10);
+// 			// villain.add(avatarCam);
+// 			//
+// 			// villain.translateY(20);
+// 			// avatarCam.translateY(-4);
+// 			// avatarCam.translateZ(3);
+// 			villain.scale.x = 2;
+// 			villain.scale.y = 2;
+// 			villain.scale.z = 2;
+//
+// 			villain.addEventListener('collision',function(other_object){
+//         if (villain==villain){
+//           gameState.health--;
+// 					villain.__dirtyPosition = true;
+// 					villain.position.set(r
+// 						andN(50),10,randN(50));
+//         }
+//       })
+// 			scene.add(villain);
+// 		}
+// 	)
+// 	}
 
 
 	function randN(n){
@@ -463,6 +525,13 @@ The user moves a cube around the board trying to knock balls into a cone
 	  //npc.__dirtyPosition = true;
 		npc.setLinearVelocity(npc.getWorldDirection().multiplyScalar(2));
 	}
+
+	function updatevillain(){
+		villain.lookAt(villain.position);
+	  //npc.__dirtyPosition = true;
+		villain.setLinearVelocity(npc.getWorldDirection().multiplyScalar(2));
+	}
+
 
   function updateAvatar(){
 		"change the avatar's linear or angular velocity based on controls state (set by WSAD key presses)"
