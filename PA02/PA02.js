@@ -221,7 +221,7 @@ The user moves a cube around the board trying to knock balls into a cone
 			var villain = new THREE.Mesh( ball_geometry, ball_material );
 			scene.add( villain );
 			villain.position.set(-15,3,30);
-		
+		// add villain
 
 
 			var rain = createRainMesh();
