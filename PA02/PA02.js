@@ -208,6 +208,20 @@ The user moves a cube around the board trying to knock balls into a cone
 			cone.position.set(10,3,7);
 			scene.add(cone);
 
+			//Sindy's feature
+			var tree = createTreeTop ();
+			tree.position.set(-10,12.5,25);
+			scene.add(tree);
+			var trunk = createTreeTrunk();
+			trunk.position.set(-10,2.5,25);
+			scene.add(trunk);
+
+
+			var rain = createRainMesh();
+			rain.position.set(10,2.5,25);
+			scene.add(rain);
+
+
 			npc = createBoxMesh2(0x0000ff,1,2,4);
 			npc.position.set(randN(20)+15,30,randN(20)+15);
       npc.addEventListener('collision',function(other_object){
@@ -474,8 +488,48 @@ The user moves a cube around the board trying to knock balls into a cone
 		return mesh;
 	}
 
+	function createTreeTop() {
+		var leaves = new THREE.ConeGeometry( 4, 15, 50);
+		var texture = new THREE.TextureLoader().load( '/images/tree.jpg' );
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set( 1, 1 );
+		var material = new THREE.MeshLambertMaterial( { color: 0xffffff, map: texture ,side:THREE.DoubleSide} );
+		var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
+   		var mesh = new Physijs.ConeMesh( leaves, pmaterial, 0 );
+		//mesh.setDamping(0.1,0.1);
+		mesh.castShadow = true;
+		return mesh;
+	}
 
+	function createTreeTrunk() {
+		var trunk = new THREE.CylinderGeometry(1, 2, 5, 50);
+		var texture = new THREE.TextureLoader().load( '/images/trunk.jpg' );
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set( 1, 1 );
+		var material = new THREE.MeshLambertMaterial( { color: 0xffffff, map: texture ,side:THREE.DoubleSide} );
+		var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
+   		var mesh = new Physijs.BoxMesh( trunk, pmaterial );
+		//mesh.setDamping(0.1,0.1);
+		mesh.castShadow = true;
+		return mesh;
+	
+	}
 
+	function createRainMesh(){
+		var knot = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+	 	var texture = new THREE.TextureLoader().load( '/images/rainbow.jpg' );
+	 	texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set( 1, 1 );
+		var material = new THREE.MeshLambertMaterial( { color: 0xffffff, map: texture ,side:THREE.DoubleSide} );
+		var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
+   		var mesh = new Physijs.ConeMesh( knot, pmaterial, 0 );
+		//mesh.setDamping(0.1,0.1);
+		mesh.castShadow = true;
+		return mesh;
+    }
 
 
 	var clock;
