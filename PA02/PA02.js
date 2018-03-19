@@ -216,20 +216,12 @@ The user moves a cube around the board trying to knock balls into a cone
 			trunk.position.set(-10,2.5,25);
 			scene.add(trunk);
 
-			var villain = new Physijs.SphereMesh(
-				new THREE.SphereGeometry( 3 ),
-				new THREE.MeshLambertMaterial({ color: 0x4286f4 })
-			);
-			
-			villain.position.set(randN(20)+15,10,randN(20)+15);
-			villain.addEventListener('collision',function(other_object){
-			if (villain==avatar){
-				gameState.health--;
-				villain.__dirtyPosition = true;
-				villain.position.set(randN(50),10,randN(50));
-				}
-			})
-			scene.add(villain);
+			var ball_geometry = new THREE.SphereBufferGeometry(2.5, 8, 6);
+			var ball_material = new THREE.MeshLambertMaterial( {color: 0x4286f4} );
+			var villain = new THREE.Mesh( ball_geometry, ball_material );
+			scene.add( villain );
+			villain.position.set(-15,3,30);
+		
 
 
 			var rain = createRainMesh();
