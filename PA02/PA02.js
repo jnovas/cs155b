@@ -13,7 +13,7 @@ The user moves a cube around the board trying to knock balls into a cone
 	var camera, avatarCam, edgeCam;  // we have two cameras in the main scene
 	// here are some mesh objects ...
 
-	var cone, wall;
+	var cone, wall1, wall2;
 	var npc;
 	var avatar;
 
@@ -42,8 +42,8 @@ The user moves a cube around the board trying to knock balls into a cone
       initPhysijs();
 			scene = initScene();
 			createStartScene();
-			// createLoseScene();
-			// createEndScene();
+			createLoseScene();
+			createEndScene();
 			initRenderer();
 			createMainScene();
 	}
@@ -159,7 +159,6 @@ The user moves a cube around the board trying to knock balls into a cone
 		function createEndScene(){
 			endScene = initScene();
 			endText = createSkyBox('youwon.png',10);
-			//endText.rotateX(Math.PI);
 			endScene.add(endText);
 			var light1 = createPointLight();
 			light1.position.set(0,200,20);
@@ -216,14 +215,14 @@ The user moves a cube around the board trying to knock balls into a cone
 			trunk.position.set(-10,2.5,25);
 			scene.add(trunk);
 
+			// Tirtho's feature
 			var ball_geometry = new THREE.SphereBufferGeometry(2.5, 8, 6);
 			var ball_material = new THREE.MeshLambertMaterial( {color: 0x4286f4} );
 			var villain = new THREE.Mesh( ball_geometry, ball_material );
 			scene.add( villain );
 			villain.position.set(-15,3,30);
-		// add villain
 
-
+			// John's feature
 			var rain = createRainMesh();
 			rain.position.set(10,2.5,25);
 			scene.add(rain);
@@ -243,9 +242,21 @@ The user moves a cube around the board trying to knock balls into a cone
       })
 			scene.add(npc);
 
-      wall = createWall(0xffaa00,20,3,1);
-      wall.position.set(10,0,10);
-      scene.add(wall);
+			//Dan's feature
+      wall1 = createWall(0xffaa00,20,3,1);
+      wall1.position.set(10,0,10);
+      scene.add(wall1);
+
+			wall2 = createWall(0xffaa00,20,6,1);
+			wall2.rotation.y = Math.PI/2;
+			wall2.position.set(-10,0,-10);
+			scene.add(wall2);
+
+			// Andrews' feature
+			wall3 = createWall(0xffaa00,20,6,1);
+			wall3.rotation.y = Math.PI/2;
+			wall3.position.set(30,0,30);
+			scene.add(wall3);
 	}
 
 
@@ -390,7 +401,7 @@ The user moves a cube around the board trying to knock balls into a cone
     var geometry = new THREE.BoxGeometry( w, h, d);
     var material = new THREE.MeshLambertMaterial( { color: color} );
     mesh = new Physijs.BoxMesh( geometry, material, 0 );
-    //mesh = new Physijs.BoxMesh( geometry, material,0 );
+
     mesh.castShadow = true;
     return mesh;
   }
@@ -446,9 +457,8 @@ The user moves a cube around the board trying to knock balls into a cone
 				console.log("loading monkey");
 				var material = new THREE.MeshLambertMaterial( {color: 0x0000ff });
 				var pmaterial = new Physijs.createMaterial(material, 0.9, 0.05);
-				avatar = new Physijs.BoxMesh(geometry, pmaterial);
+				avatar = new Physijs.BoxMesh(geometry, material);
 				console.log("created monkeyAvatar mesh");
-				avatar.setDamping(0.1,0.1);
 				avatar.castShadow = true;
 
 				avatarCam.position.set(0,4,0);
@@ -458,9 +468,9 @@ The user moves a cube around the board trying to knock balls into a cone
 				avatar.translateY(20);
 				avatarCam.translateY(-4);
 				avatarCam.translateZ(3);
-				avatar.scale.x = 2;
-				avatar.scale.y = 2;
-			  avatar.scale.z = 2;
+				// avatar.scale.x = 2;
+				// avatar.scale.y = 2;
+			  // avatar.scale.z = 2;
 
 				scene.add(avatar);
 			},
@@ -521,7 +531,7 @@ The user moves a cube around the board trying to knock balls into a cone
 		//mesh.setDamping(0.1,0.1);
 		mesh.castShadow = true;
 		return mesh;
-	
+
 	}
 
 	function createRainMesh(){
@@ -592,6 +602,8 @@ The user moves a cube around the board trying to knock balls into a cone
           console.log("space!!");
           break;
       case "h": controls.reset = true; break;
+			case "r": avatar.rotation.set(0,0,0); avatar.__dirtyRotation=true;
+				console.dir(avatar.rotation); break;
 
 
 			// switch cameras
@@ -692,7 +704,9 @@ The user moves a cube around the board trying to knock balls into a cone
 				updateAvatar();
 				updateNPC();
 
-				wall.position.x = 10*Math.sin(angle);
+				wall1.position.x = 10*Math.sin(angle)+10;
+				wall2.position.z = 10*Math.sin(angle)+10;
+				wall3.position.z = 10*Math.sin(angle)+10;
 
         edgeCam.lookAt(avatar.position);
 	    	scene.simulate();
