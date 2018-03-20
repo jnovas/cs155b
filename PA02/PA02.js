@@ -14,7 +14,7 @@ The user moves a cube around the board trying to knock balls into a cone
 	// here are some mesh objects ...
 
 	var cone, wall1, wall2, wall3;
-	var npc;
+	var npc, bigBadNPC;
 	var avatar;
 
 	var startScene, startCamera;
@@ -233,7 +233,7 @@ The user moves a cube around the board trying to knock balls into a cone
       npc.addEventListener('collision',function(other_object){
         if (other_object==avatar){
           gameState.health--;
-					if(gameState.score == 0) {
+					if(gameState.health == 0) {
 						gameState.scene='youlose';
 					}
 					npc.__dirtyPosition = true;
@@ -242,7 +242,7 @@ The user moves a cube around the board trying to knock balls into a cone
       })
 			scene.add(npc);
 
-			//Dan's feature
+			//Dan's features
       wall1 = createWall(0xffaa00,20,3,1);
       wall1.position.set(10,0,10);
       scene.add(wall1);
@@ -252,11 +252,25 @@ The user moves a cube around the board trying to knock balls into a cone
 			wall2.position.set(-10,0,-10);
 			scene.add(wall2);
 
-			// Andrews' feature
 			wall3 = createWall(0xffaa00,20,6,1);
 			wall3.rotation.y = Math.PI/2;
 			wall3.position.set(30,0,30);
 			scene.add(wall3);
+
+			// Andrews' feature
+			bigBadNPC = createBoxMesh2 (0xff0000,5,5,4);
+			bigBadNPC.position.set(randN(20)+15,30,randN(20)+15);
+			bigBadNPC.addEventListener('collision',function(other_object){
+				if (other_object==avatar){
+					gameState.health = gameState.health - 3;
+					if(gameState.health <= 0) {
+						gameState.scene='youlose';
+					}
+					avatar.__dirtyPosition = true;
+					avatar.position.set(randN(50),2,randN(50));
+				}
+			})
+			scene.add(bigBadNPC);
 	}
 
 
@@ -638,11 +652,16 @@ The user moves a cube around the board trying to knock balls into a cone
 
 	function updateNPC(){
 		npc.lookAt(avatar.position);
-	  //npc.__dirtyPosition = true;
 		npcPosition = new THREE.Vector3(npc.position.x, npc.position.y, npc.position.z)
 		if(npcPosition.distanceTo(new THREE.Vector3(avatar.position.x, avatar.position.y, avatar.position.z)) < 20) {
 			npc.setLinearVelocity(npc.getWorldDirection().multiplyScalar(2));
 		}
+	}
+
+	function updateBigBadNPC(){
+		bigBadNPC.lookAt(avatar.position);
+		bigBadNPCPosition = new THREE.Vector3(bigBadNPC.position.x, bigBadNPC.position.y, bigBadNPC.position.z)
+		bigBadNPC.setLinearVelocity(npc.getWorldDirection().multiplyScalar(1));
 	}
 
   function updateAvatar(){
@@ -703,6 +722,7 @@ The user moves a cube around the board trying to knock balls into a cone
 
 				updateAvatar();
 				updateNPC();
+				updateBigBadNPC();
 
 				wall1.position.x = 10*Math.sin(angle)+10;
 				wall2.position.z = 10*Math.sin(angle)+10;
