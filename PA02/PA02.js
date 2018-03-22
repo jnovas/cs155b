@@ -304,7 +304,7 @@ The user moves a cube around the board trying to knock balls into a cone
 						}
 						// make the ball drop below the scene ..
 						// threejs doesn't let us remove it from the schene...
-						this.position.y = this.position.y - 100;
+						this.position.y = this.position.y - 2;
 						this.__dirtyPosition = true;
 					}
           else if (other_object == cone){
