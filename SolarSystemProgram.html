@@ -57,6 +57,7 @@
         var sceneUranus = new THREE.Scene(); //6
         var sceneMercury = new THREE.Scene(); //7
         var sceneSaturn = new THREE.Scene(); //8
+        var sceneRings = new THREE.Scene(); //Saturn's rings
         var sceneNeptune = new THREE.Scene(); //9
     //    var sceneStar = new THREE.Scene();//10
 
@@ -64,6 +65,8 @@
 
         // create a camera, which defines where we're looking at.
         var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        var mainCamera=camera;
+        var sunCamera;
         var cameraBG = new THREE.OrthographicCamera(-window.innerWidth, window.innerWidth, window.innerHeight, -window.innerHeight, -10000, 10000);
         cameraBG.position.z = 50;
 
@@ -93,6 +96,13 @@
         var sphere7 = createSaturnMesh(new THREE.SphereGeometry(4, 40, 40));
         sphere7.position.x = 110;
         sphere7.position.z = -100;
+
+       	var rings = createRings(new THREE.CylinderGeometry( 10, 10, .1, 100 ));
+       	rings.position.x = 110;
+        rings.position.z = -100;
+       	rings.rotation.x = Math.PI/(-30) ;
+       	rings.rotation.z = Math.PI/(10) ;
+
         var sphere8 = createUranusMesh(new THREE.SphereGeometry(5, 40, 40));
         sphere8.position.x = 130;
         sphere8.position.z = 120;
@@ -118,6 +128,7 @@
         sceneMercury.add(sphere7);
         sceneSaturn.add(sphere8);
         sceneNeptune.add(sphere9);
+        sceneRings.add(rings);
       // TIRTHO  sceneStar.add(star);
 
         // position and point the camera to the center of the scene
@@ -139,6 +150,7 @@
         var ambi5 = new THREE.AmbientLight(0xffffff);
         var ambi6 = new THREE.AmbientLight(0xffffff);
         var ambi7 = new THREE.AmbientLight(0xffffff);
+        var ambiR = new THREE.AmbientLight(0xffffff);
         var ambi8 = new THREE.AmbientLight(0xffffff);
         var ambi9 = new THREE.AmbientLight(0xffffff);
 
@@ -151,6 +163,7 @@
         sceneUranus.add(ambi6);
         sceneMercury.add(ambi7);
         sceneSaturn.add(ambi8);
+        sceneRings.add(ambiR);
         sceneNeptune.add(ambi9);
 
 
@@ -182,6 +195,10 @@
         spotLight.position.set(550, 100, 550);
         spotLight.intensity = 0.6;
 
+        var spotLightR = new THREE.DirectionalLight(0xffffff);
+        spotLight.position.set(550, 100, 550);
+        spotLight.intensity = 0.6;
+
         var spotLight8 = new THREE.DirectionalLight(0xffffff);
         spotLight.position.set(550, 100, 550);
         spotLight.intensity = 0.6;
@@ -205,6 +222,7 @@
         sceneUranus.add(spotLight6);
         sceneMercury.add(spotLight7);
         sceneSaturn.add(spotLight8);
+        sceneRings.add(spotLightR);
         sceneNeptune.add(spotLight9);
       //  sceneStar.add(spotLight10);
 
@@ -247,6 +265,9 @@
         var renderPass8 = new THREE.RenderPass(sceneSaturn, camera);
         renderPass8.clear = false;
 
+        var renderPassR = new THREE.RenderPass(sceneRings, camera);
+        renderPassR.clear = false;
+
         var renderPass9 = new THREE.RenderPass(sceneNeptune, camera);
         renderPass9.clear = false;
 
@@ -265,6 +286,7 @@
 		    var uranusMask = new THREE.MaskPass(sceneUranus, camera);
         var mercuryMask = new THREE.MaskPass(sceneMercury, camera);
         var saturnMask = new THREE.MaskPass(sceneSaturn, camera);
+        var ringsMask = new THREE.MaskPass(sceneSaturn, camera);
 		    var neptuneMask = new THREE.MaskPass(sceneNeptune, camera);
 
         var composer = new THREE.EffectComposer(webGLRenderer);
@@ -280,6 +302,7 @@
         composer.addPass(renderPass6);
         composer.addPass(renderPass7);
         composer.addPass(renderPass8);
+        composer.addPass(renderPassR);
         composer.addPass(renderPass9);
         composer.addPass(earthMask);
         composer.addPass(marsMask);
@@ -288,6 +311,7 @@
         composer.addPass(jupiterMask);
         composer.addPass(mercuryMask);
         composer.addPass(saturnMask);
+        composer.addPass(ringsMask);
         composer.addPass(neptuneMask);
         composer.addPass(clearMask);
         composer.addPass(effectCopy);
@@ -318,6 +342,9 @@
             planetMaterial.map = planetTexture;
             // create a multimaterial
             var mesh = THREE.SceneUtils.createMultiMaterialObject(geom, [planetMaterial]);
+            sunCamera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
+            mesh.add(sunCamera);
+            camera = sunCamera;
             return mesh;
         }
 
@@ -381,6 +408,19 @@
             return mesh;
         }
 
+        function createRings(geom) {
+			var ringsTexture = THREE.ImageUtils.loadTexture("../saturn rings.jpg");
+			ringsTexture.wrapS = THREE.RepeatWrapping;
+			ringsTexture.repeat.set( 1, 1 );
+            var ringsMaterial = new THREE.MeshPhongMaterial();
+            ringsMaterial.map = ringsTexture;
+            // create a multimaterial
+            var mesh = THREE.SceneUtils.createMultiMaterialObject(geom, [ringsMaterial]);
+            ringsTexture.material = THREE.DoubleSide;
+            return mesh;
+
+        }
+
         function createNeptuneMesh(geom) {
             var planetTexture = THREE.ImageUtils.loadTexture("../neptune.jpg");
             var planetMaterial = new THREE.MeshPhongMaterial();
@@ -429,6 +469,7 @@
             sphere6.rotation.y += 0.002;
             sphere7.rotation.y += 0.002;
             sphere8.rotation.y += 0.002;
+            // rings.rotation.y += 0.002;
             sphere9.rotation.y += 0.002;
 
 
