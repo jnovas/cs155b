@@ -43,10 +43,32 @@
 <!-- Javascript code that runs our Three.js examples -->
 <script type="text/javascript">
 
+    var sceneState = 'planets';
+    var startScene, startCamera;
+    var renderer;
+
+    function initRenderer(){
+      renderer = new THREE.WebGLRenderer();
+      renderer.setSize( window.innerWidth, window.innerHeight-50 );
+      document.body.appendChild( renderer.domElement );
+    }
+
+    function createStartScene() {
+      startScene = new THREE.Scene();
+      var light = new THREE.AmbientLight(0xffffff);
+      startScene.add(light);
+
+      startCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
+      startCamera.position.set(0,0,10);
+      startCamera.lookAt(0,0,0);
+    }
+
     // once everything is loaded, we run our Three.js stuff.
     function init() {
 
         var stats = initStats();
+        createStartScene();
+        initRenderer();
 
         // create a scene, that will hold all our elements such as objects, cameras and lights.
         var sceneEarth = new THREE.Scene();//1
@@ -451,32 +473,45 @@
   */
 
         function render() {
+          // render using requestAnimationFrame
+          requestAnimationFrame(render);
 
-            webGLRenderer.autoClear = false;
+          switch(sceneState) {
+            case "start":
+              webGLRenderer.render(startScene, startCamera);
+              stats.update();
+              break;
 
-            stats.update();
+            case "planets":
 
+              webGLRenderer.autoClear = false;
 
-            // sphere.rotation.y=step+=0.01;
-            var delta = clock.getDelta();
-            orbitControls.update(delta);
-
-            sphere.rotation.y += 0.002;
-            sphere2.rotation.y += 0.002;
-            sphere3.rotation.y += 0.002;
-            sphere4.rotation.y += 0.002;
-            sphere5.rotation.y += 0.002;
-            sphere6.rotation.y += 0.002;
-            sphere7.rotation.y += 0.002;
-            sphere8.rotation.y += 0.002;
-            // rings.rotation.y += 0.002;
-            sphere9.rotation.y += 0.002;
+              stats.update();
 
 
-            // render using requestAnimationFrame
-            requestAnimationFrame(render);
-//            webGLRenderer.render(scene, camera);
-            composer.render(delta);
+              // sphere.rotation.y=step+=0.01;
+              var delta = clock.getDelta();
+              orbitControls.update(delta);
+
+              sphere.rotation.y += 0.002;
+              sphere2.rotation.y += 0.002;
+              sphere3.rotation.y += 0.002;
+              sphere4.rotation.y += 0.002;
+              sphere5.rotation.y += 0.002;
+              sphere6.rotation.y += 0.002;
+              sphere7.rotation.y += 0.002;
+              sphere8.rotation.y += 0.002;
+              // rings.rotation.y += 0.002;
+              sphere9.rotation.y += 0.002;
+
+  //            webGLRenderer.render(scene, camera);
+              composer.render(delta);
+              break;
+
+            default:
+              console.log("don't know the scene " + sceneState);
+
+          }
         }
 
         function initStats() {
