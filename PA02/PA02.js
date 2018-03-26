@@ -13,8 +13,8 @@ The user moves a cube around the board trying to knock balls into a cone
 	var camera, avatarCam, edgeCam;  // we have two cameras in the main scene
 	// here are some mesh objects ...
 
-	var cone, wall;
-	var npc;
+	var cone, wall1, wall2, wall3;
+	var npc, bigBadNPC;
 	var avatar;
 
 	var startScene, startCamera;
@@ -42,8 +42,8 @@ The user moves a cube around the board trying to knock balls into a cone
       initPhysijs();
 			scene = initScene();
 			createStartScene();
-			// createLoseScene();
-			// createEndScene();
+			createLoseScene();
+			createEndScene();
 			initRenderer();
 			createMainScene();
 	}
@@ -159,7 +159,6 @@ The user moves a cube around the board trying to knock balls into a cone
 		function createEndScene(){
 			endScene = initScene();
 			endText = createSkyBox('youwon.png',10);
-			//endText.rotateX(Math.PI);
 			endScene.add(endText);
 			var light1 = createPointLight();
 			light1.position.set(0,200,20);
@@ -208,12 +207,33 @@ The user moves a cube around the board trying to knock balls into a cone
 			cone.position.set(10,3,7);
 			scene.add(cone);
 
+			//Sindy's feature
+			var tree = createTreeTop ();
+			tree.position.set(-10,12.5,25);
+			scene.add(tree);
+			var trunk = createTreeTrunk();
+			trunk.position.set(-10,2.5,25);
+			scene.add(trunk);
+
+			// Tirtho's feature
+			var ball_geometry = new THREE.SphereBufferGeometry(2.5, 8, 6);
+			var ball_material = new THREE.MeshLambertMaterial( {color: 0x4286f4} );
+			var villain = new THREE.Mesh( ball_geometry, ball_material );
+			scene.add( villain );
+			villain.position.set(-15,3,30);
+
+			// John's feature
+			var rain = createRainMesh();
+			rain.position.set(10,2.5,25);
+			scene.add(rain);
+
+
 			npc = createBoxMesh2(0x0000ff,1,2,4);
 			npc.position.set(randN(20)+15,30,randN(20)+15);
       npc.addEventListener('collision',function(other_object){
         if (other_object==avatar){
           gameState.health--;
-					if(gameState.score == 0) {
+					if(gameState.health == 0) {
 						gameState.scene='youlose';
 					}
 					npc.__dirtyPosition = true;
@@ -222,9 +242,35 @@ The user moves a cube around the board trying to knock balls into a cone
       })
 			scene.add(npc);
 
-      wall = createWall(0xffaa00,20,3,1);
-      wall.position.set(10,0,10);
-      scene.add(wall);
+			//Dan's features
+      wall1 = createWall(0xffaa00,20,3,1);
+      wall1.position.set(10,0,10);
+      scene.add(wall1);
+
+			wall2 = createWall(0xffaa00,20,6,1);
+			wall2.rotation.y = Math.PI/2;
+			wall2.position.set(-10,0,-10);
+			scene.add(wall2);
+
+			wall3 = createWall(0xffaa00,20,6,1);
+			wall3.rotation.y = Math.PI/2;
+			wall3.position.set(30,0,30);
+			scene.add(wall3);
+
+			// Andrews' feature
+			bigBadNPC = createBoxMesh2 (0xff0000,5,5,4);
+			bigBadNPC.position.set(randN(20)+15,30,randN(20)+15);
+			bigBadNPC.addEventListener('collision',function(other_object){
+				if (other_object==avatar){
+					gameState.health = gameState.health - 3;
+					if(gameState.health <= 0) {
+						gameState.scene='youlose';
+					}
+					avatar.__dirtyPosition = true;
+					avatar.position.set(randN(50),2,randN(50));
+				}
+			})
+			scene.add(bigBadNPC);
 	}
 
 
@@ -258,7 +304,7 @@ The user moves a cube around the board trying to knock balls into a cone
 						}
 						// make the ball drop below the scene ..
 						// threejs doesn't let us remove it from the schene...
-						this.position.y = this.position.y - 100;
+						this.position.y = this.position.y - 2;
 						this.__dirtyPosition = true;
 					}
           else if (other_object == cone){
@@ -369,7 +415,7 @@ The user moves a cube around the board trying to knock balls into a cone
     var geometry = new THREE.BoxGeometry( w, h, d);
     var material = new THREE.MeshLambertMaterial( { color: color} );
     mesh = new Physijs.BoxMesh( geometry, material, 0 );
-    //mesh = new Physijs.BoxMesh( geometry, material,0 );
+
     mesh.castShadow = true;
     return mesh;
   }
@@ -425,9 +471,8 @@ The user moves a cube around the board trying to knock balls into a cone
 				console.log("loading monkey");
 				var material = new THREE.MeshLambertMaterial( {color: 0x0000ff });
 				var pmaterial = new Physijs.createMaterial(material, 0.9, 0.05);
-				avatar = new Physijs.BoxMesh(geometry, pmaterial);
+				avatar = new Physijs.BoxMesh(geometry, material);
 				console.log("created monkeyAvatar mesh");
-				avatar.setDamping(0.1,0.1);
 				avatar.castShadow = true;
 
 				avatarCam.position.set(0,4,0);
@@ -437,9 +482,9 @@ The user moves a cube around the board trying to knock balls into a cone
 				avatar.translateY(20);
 				avatarCam.translateY(-4);
 				avatarCam.translateZ(3);
-				avatar.scale.x = 2;
-				avatar.scale.y = 2;
-			  avatar.scale.z = 2;
+				// avatar.scale.x = 2;
+				// avatar.scale.y = 2;
+			  // avatar.scale.z = 2;
 
 				scene.add(avatar);
 			},
@@ -474,8 +519,48 @@ The user moves a cube around the board trying to knock balls into a cone
 		return mesh;
 	}
 
+	function createTreeTop() {
+		var leaves = new THREE.ConeGeometry( 4, 15, 50);
+		var texture = new THREE.TextureLoader().load( '/images/tree.jpg' );
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set( 1, 1 );
+		var material = new THREE.MeshLambertMaterial( { color: 0xffffff, map: texture ,side:THREE.DoubleSide} );
+		var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
+   		var mesh = new Physijs.ConeMesh( leaves, pmaterial, 0 );
+		//mesh.setDamping(0.1,0.1);
+		mesh.castShadow = true;
+		return mesh;
+	}
 
+	function createTreeTrunk() {
+		var trunk = new THREE.CylinderGeometry(1, 2, 5, 50);
+		var texture = new THREE.TextureLoader().load( '/images/trunk.jpg' );
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set( 1, 1 );
+		var material = new THREE.MeshLambertMaterial( { color: 0xffffff, map: texture ,side:THREE.DoubleSide} );
+		var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
+   		var mesh = new Physijs.BoxMesh( trunk, pmaterial );
+		//mesh.setDamping(0.1,0.1);
+		mesh.castShadow = true;
+		return mesh;
 
+	}
+
+	function createRainMesh(){
+		var knot = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+	 	var texture = new THREE.TextureLoader().load( '/images/rainbow.jpg' );
+	 	texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set( 1, 1 );
+		var material = new THREE.MeshLambertMaterial( { color: 0xffffff, map: texture ,side:THREE.DoubleSide} );
+		var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
+   		var mesh = new Physijs.ConeMesh( knot, pmaterial, 0 );
+		//mesh.setDamping(0.1,0.1);
+		mesh.castShadow = true;
+		return mesh;
+    }
 
 
 	var clock;
@@ -531,6 +616,8 @@ The user moves a cube around the board trying to knock balls into a cone
           console.log("space!!");
           break;
       case "h": controls.reset = true; break;
+			case "r": avatar.rotation.set(0,0,0); avatar.__dirtyRotation=true;
+				console.dir(avatar.rotation); break;
 
 
 			// switch cameras
@@ -565,11 +652,16 @@ The user moves a cube around the board trying to knock balls into a cone
 
 	function updateNPC(){
 		npc.lookAt(avatar.position);
-	  //npc.__dirtyPosition = true;
 		npcPosition = new THREE.Vector3(npc.position.x, npc.position.y, npc.position.z)
 		if(npcPosition.distanceTo(new THREE.Vector3(avatar.position.x, avatar.position.y, avatar.position.z)) < 20) {
 			npc.setLinearVelocity(npc.getWorldDirection().multiplyScalar(2));
 		}
+	}
+
+	function updateBigBadNPC(){
+		bigBadNPC.lookAt(avatar.position);
+		bigBadNPCPosition = new THREE.Vector3(bigBadNPC.position.x, bigBadNPC.position.y, bigBadNPC.position.z)
+		bigBadNPC.setLinearVelocity(npc.getWorldDirection().multiplyScalar(1));
 	}
 
   function updateAvatar(){
@@ -630,8 +722,11 @@ The user moves a cube around the board trying to knock balls into a cone
 
 				updateAvatar();
 				updateNPC();
+				updateBigBadNPC();
 
-				wall.position.x = 10*Math.sin(angle);
+				wall1.position.x = 10*Math.sin(angle)+10;
+				wall2.position.z = 10*Math.sin(angle)+10;
+				wall3.position.z = 10*Math.sin(angle)+10;
 
         edgeCam.lookAt(avatar.position);
 	    	scene.simulate();
