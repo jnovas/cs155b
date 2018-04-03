@@ -108,13 +108,28 @@
         sphere8.position.z = 120;
         var sphere9 = createNeptuneMesh(new THREE.SphereGeometry(5, 40, 40));
         sphere9.position.x = 150;
-        /**
-        TIRTHO
-        var star = createStarMesh(new THREE.SphereGeometry(1, 8, 6));
-        star.position.x = ( Math.random() - 0.5 ) * 1000;
-				star.position.y = ( Math.random() - 0.5 ) * 1000;
-				star.position.z = ( Math.random() - 0.5 ) * 1000;
-        */
+
+        //TIRTHO
+
+        // var star_geometry = new THREE.SphereGeometry(1, 8, 6);
+        // var star_material = new THREE.MeshBasicMaterial( { color: 0xffffe6, flatShading: true } );
+
+        // var star = createStarMesh(new THREE.SphereGeometry(1, 8, 6));
+        // for ( var i = 0; i < 500; i ++ ) {
+        //   var mesh = new THREE.Mesh(star_geometry, star_material);
+        //   // var glowMesh	= new THREEx.GeometricGlowMesh(mesh); mesh.add(glowMesh.object3d);
+        //   // var insideUniforms	= glowMesh.insideMesh.material.uniforms
+        //   // insideUniforms.glowColor.value.set('white')
+        //   // var outsideUniforms	= glowMesh.outsideMesh.material.uniforms
+        //   // outsideUniforms.glowColor.value.set('white')
+        //   // mesh.add(glowMesh);
+        //   mesh.position.x = ( Math.random() - 0.5 ) * 1000;
+        //   mesh.position.y = ( Math.random() - 0.5 ) * 1000;
+        //   mesh.position.z = ( Math.random() - 0.5 ) * 1000;
+        //   mesh.updateMatrix();
+        //   mesh.matrixAutoUpdate = false;
+        // //  scene.add( mesh );
+        // }
 
 
 
@@ -131,7 +146,9 @@
         sceneRings.add(rings);
       // TIRTHO  sceneStar.add(star);
 
+
         // position and point the camera to the center of the scene
+
         camera.position.x = -10;
         camera.position.y = 15;
         camera.position.z = 25;
@@ -153,6 +170,7 @@
         var ambiR = new THREE.AmbientLight(0xffffff);
         var ambi8 = new THREE.AmbientLight(0xffffff);
         var ambi9 = new THREE.AmbientLight(0xffffff);
+  // TIRTHO      var ambi10 = new THREE.AmbientLight(0xffffff);
 
 
         sceneEarth.add(ambi);
@@ -165,6 +183,7 @@
         sceneSaturn.add(ambi8);
         sceneRings.add(ambiR);
         sceneNeptune.add(ambi9);
+  // TIRTHO      sceneStar.add(ambi10);
 
 
         var spotLight = new THREE.DirectionalLight(0xffffff);
@@ -207,12 +226,12 @@
         spotLight.position.set(550, 100, 550);
         spotLight.intensity = 0.6;
 
-      /**
-      TIRTHO
-        var spotLight10 = new THREE.DirectionalLight(0xffffff);
-        spotLight.position.set(550, 100, 550);
-        spotLight.intensity = 0.6;
-        */
+        // TIRTHO
+
+        // var spotLight10 = new THREE.DirectionalLight(0xffffff);
+        // spotLight.position.set(550, 100, 550);
+        // spotLight.intensity = 0.6;
+
 
         sceneEarth.add(spotLight);
         sceneMars.add(spotLight2);
@@ -224,7 +243,7 @@
         sceneSaturn.add(spotLight8);
         sceneRings.add(spotLightR);
         sceneNeptune.add(spotLight9);
-      //  sceneStar.add(spotLight10);
+    // TIRTHO    sceneStar.add(spotLight10);
 
         var materialColor = new THREE.MeshBasicMaterial({
             map: THREE.ImageUtils.loadTexture("../starry-deep-outer-space-galaxy.jpg"),
@@ -271,6 +290,10 @@
         var renderPass9 = new THREE.RenderPass(sceneNeptune, camera);
         renderPass9.clear = false;
 
+        // TIRTHO
+        // var renderPass10 = new THREE.RenderPass(sceneStar, camera);
+        // renderPass10.clear = false;
+
 
 
         var effectCopy = new THREE.ShaderPass(THREE.CopyShader);
@@ -288,6 +311,7 @@
         var saturnMask = new THREE.MaskPass(sceneSaturn, camera);
         var ringsMask = new THREE.MaskPass(sceneSaturn, camera);
 		    var neptuneMask = new THREE.MaskPass(sceneNeptune, camera);
+    // TIRTHO    var starMask = new THREE.MaskPass(sceneStar, camera);
 
         var composer = new THREE.EffectComposer(webGLRenderer);
         composer.renderTarget1.stencilBuffer = true;
@@ -304,6 +328,7 @@
         composer.addPass(renderPass8);
         composer.addPass(renderPassR);
         composer.addPass(renderPass9);
+  //   TIRTHO   composer.addPass(renderPass10);
         composer.addPass(earthMask);
         composer.addPass(marsMask);
         composer.addPass(sunMask);
@@ -313,6 +338,7 @@
         composer.addPass(saturnMask);
         composer.addPass(ringsMask);
         composer.addPass(neptuneMask);
+//    TIRTHO    composer.addPass(starMask);
         composer.addPass(clearMask);
         composer.addPass(effectCopy);
 
@@ -429,26 +455,26 @@
             var mesh = THREE.SceneUtils.createMultiMaterialObject(geom, [planetMaterial]);
             return mesh;
         }
-/**
-  TIRTHO
-        function createStarMesh(geom){
-            for ( var i = 0; i < 500; i ++ ) {
-                var star_material = new THREE.MeshBasicMaterial( { color: 0xffffe6, flatShading: true } );
-                var mesh = new THREE.Mesh(geom, [star_material]);
-              //  var glowMesh	= new THREEx.GeometricGlowMesh(mesh); mesh.add(glowMesh.object3d);
-              //  var insideUniforms	= glowMesh.insideMesh.material.uniforms
-              //  insideUniforms.glowColor.value.set('white')
-              //  var outsideUniforms	= glowMesh.outsideMesh.material.uniforms
-              //  outsideUniforms.glowColor.value.set('white')
-              //  mesh.add(glowMesh);
-                mesh.updateMatrix();
-                mesh.matrixAutoUpdate = false;
-                //scene.add( mesh );
-                return mesh;
-            }
 
-        }
-  */
+        //    TIRTHO
+        //function createStarMesh(geom){
+        //     for ( var i = 0; i < 500; i ++ ) {
+        //         var star_material = new THREE.MeshBasicMaterial( { color: 0xffffe6, flatShading: true } );
+        //         var mesh =  THREE.SceneUtils.createMultiMaterialObject(geom, [star_material]);
+        //       //  var glowMesh	= new THREEx.GeometricGlowMesh(mesh); mesh.add(glowMesh.object3d);
+        //       //  var insideUniforms	= glowMesh.insideMesh.material.uniforms
+        //       //  insideUniforms.glowColor.value.set('white')
+        //       //  var outsideUniforms	= glowMesh.outsideMesh.material.uniforms
+        //       //  outsideUniforms.glowColor.value.set('white')
+        //       //  mesh.add(glowMesh);
+        //         mesh.updateMatrix();
+        //         mesh.matrixAutoUpdate = false;
+        //         //scene.add( mesh );
+        //         sceneStar.add(star);
+        //     }
+        //
+        // //
+
 
         function render() {
 
