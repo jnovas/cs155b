@@ -80,22 +80,22 @@
         sphere.position.x = -10;
         sphere.add(createSunGlow());
         var sphere2 = createMercuryMesh(new THREE.SphereGeometry(1, 40, 40));
-        sphere2.position.x = 10;
+        //sphere2.position.x = 10;
         var sphere3 = createVenusMesh(new THREE.SphereGeometry(1.5, 40, 40));
-        sphere3.position.x = 30;
-        sphere3.position.z = 60;
+        //sphere3.position.x = 30;
+        //sphere3.position.z = 60;
         var sphere4 = createEarthMesh(new THREE.SphereGeometry(2, 40, 40));
-        sphere4.position.x = 50;
-        sphere4.position.z = -90;
+        //sphere4.position.x = 50;
+      //  sphere4.position.z = -90;
         var sphere5 = createMarsMesh(new THREE.SphereGeometry(2, 40, 40));
-        sphere5.position.x = 70;
-        sphere5.position.z = -30;
+        //sphere5.position.x = 70;
+        //sphere5.position.z = -30;
         var sphere6 = createJupiterMesh(new THREE.SphereGeometry(5, 40, 40));
-        sphere6.position.x = 90;
-        sphere6.position.z = 70;
+        //sphere6.position.x = 90;
+        //sphere6.position.z = 70;
         var sphere7 = createSaturnMesh(new THREE.SphereGeometry(4, 40, 40));
-        sphere7.position.x = 110;
-        sphere7.position.z = -100;
+        //sphere7.position.x = 110;
+        //sphere7.position.z = -100;
 
        	var rings = createRings(new THREE.CylinderGeometry( 10, 10, .1, 100 ));
        	rings.position.x = 110;
@@ -104,10 +104,10 @@
        	rings.rotation.z = Math.PI/(10) ;
 
         var sphere8 = createUranusMesh(new THREE.SphereGeometry(5, 40, 40));
-        sphere8.position.x = 130;
-        sphere8.position.z = 120;
+        //sphere8.position.x = 130;
+        //sphere8.position.z = 120;
         var sphere9 = createNeptuneMesh(new THREE.SphereGeometry(5, 40, 40));
-        sphere9.position.x = 150;
+        //sphere9.position.x = 150;
 
         //TIRTHO
 
@@ -482,22 +482,48 @@
 
             stats.update();
 
+                        // Andrews Orbits
 
-            // sphere.rotation.y=step+=0.01;
-            var delta = clock.getDelta();
-            orbitControls.update(delta);
+                        // sphere.rotation.y=step+=0.01;
+                        var delta = clock.getDelta();
+                        orbitControls.update(delta);
 
-            sphere.rotation.y += 0.002;
-            sphere2.rotation.y += 0.002;
-            sphere3.rotation.y += 0.002;
-            sphere4.rotation.y += 0.002;
-            sphere5.rotation.y += 0.002;
-            sphere6.rotation.y += 0.002;
-            sphere7.rotation.y += 0.002;
-            sphere8.rotation.y += 0.002;
-            // rings.rotation.y += 0.002;
-            sphere9.rotation.y += 0.002;
+                        //sphere4.rotation.y = Date.now() * -0.001;
+                        // Mercury
+                        sphere2.position.x = Math.sin( Date.now() * 0.00047 ) * 20.15;
+                        sphere2.position.z = Math.cos( Date.now() * 0.00047 ) * 20.15;
+                        // Venus
+                        sphere3.position.x = Math.sin( Date.now() * 0.00035 ) * 30.15;
+                        sphere3.position.z = Math.cos( Date.now() * 0.00035 ) * 30.15;
+                        // Earth
+                        sphere4.position.x = Math.sin( Date.now() * 0.00029 ) * 45.15;
+                        sphere4.position.z = Math.cos( Date.now() * 0.00029 ) * 45.15;
+                        // Mars
+                        sphere5.position.x = Math.sin( Date.now() * 0.00024 ) * 60.15;
+                        sphere5.position.z = Math.cos( Date.now() * 0.00024 ) * 60.15;
+                        // Jupiter
+                        sphere6.position.x = Math.sin( Date.now() * 0.00013 ) * 75.15;
+                        sphere6.position.z = Math.cos( Date.now() * 0.00013 ) * 75.15;
+                        // Saturn
+                        sphere7.position.x = Math.sin( Date.now() * 0.0009 ) * 90.15;
+                        sphere7.position.z = Math.cos( Date.now() * 0.0009 ) * 90.15;
+                        // Uranus
+                        sphere8.position.x = Math.sin( Date.now() * 0.0006 ) * 105.15;
+                        sphere8.position.z = Math.cos( Date.now() * 0.0006 ) * 105.15;
+                        // Neptune
+                        sphere9.position.x = Math.sin( Date.now() * 0.0005 ) * 120.15;
+                        sphere9.position.z = Math.cos( Date.now() * 0.0005 ) * 120.15;
 
+                        sphere.rotation.y += 0.002;
+                        sphere2.rotation.y += 0.002;
+                        sphere3.rotation.y += 0.002;
+                        sphere4.rotation.y += 0.002;
+                        sphere5.rotation.y += 0.002;
+                        sphere6.rotation.y += 0.002;
+                        sphere7.rotation.y += 0.002;
+                        sphere8.rotation.y += 0.002;
+                        // rings.rotation.y += 0.002;
+                        sphere9.rotation.y += 0.002;
 
             // render using requestAnimationFrame
             requestAnimationFrame(render);
