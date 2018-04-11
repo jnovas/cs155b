@@ -36,7 +36,8 @@
 		<script src="threex.atmospherematerial.js"></script>
 		<script src="threex.geometricglowmesh.js"></script>
 		<script src="threex.atmospherematerialdatgui.js"></script>
-		<script src="../libs/dat.gui.min.js"></script>
+
+
 
 
 		<script>
@@ -67,7 +68,6 @@
 
 				controls.minDistance = 100;
 				controls.maxDistance = 500
-				
 				controls.maxPolarAngle = Math.PI / 2;
 
 				var star_geometry = new THREE.SphereGeometry(1, 8, 6);
@@ -75,12 +75,12 @@
 
 				for ( var i = 0; i < 500; i ++ ) {
 				  var mesh = new THREE.Mesh(star_geometry, star_material);
-				  var glowMesh	= new THREEx.GeometricGlowMesh(mesh); mesh.add(glowMesh.object3d);
-				  var insideUniforms	= glowMesh.insideMesh.material.uniforms
-				  insideUniforms.glowColor.value.set('white')
-				  var outsideUniforms	= glowMesh.outsideMesh.material.uniforms
-				  outsideUniforms.glowColor.value.set('white')
-				  mesh.add(glowMesh);
+				  // var glowMesh	= new THREEx.GeometricGlowMesh(mesh); mesh.add(glowMesh.object3d);
+				  // var insideUniforms	= glowMesh.insideMesh.material.uniforms
+				  // insideUniforms.glowColor.value.set('white')
+				  // var outsideUniforms	= glowMesh.outsideMesh.material.uniforms
+				  // outsideUniforms.glowColor.value.set('white')
+				  // mesh.add(glowMesh);
 					mesh.position.x = ( Math.random() - 0.5 ) * 1000;
 					mesh.position.y = ( Math.random() - 0.5 ) * 1000;
 					mesh.position.z = ( Math.random() - 0.5 ) * 1000;
@@ -111,13 +111,13 @@
 
 			function initRenderer(){
 				renderer = new THREE.WebGLRenderer();
-				renderer.setPixelRatio( window.devicePixelRatio );
+			//	renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 			}
 
 			function initScene(){
 				scene = new THREE.Scene();
-				scene.background = new THREE.Color( 0x000066 );
+				scene.background = new THREE.Color( 0x2859a8 );
 				scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
 			}
 
