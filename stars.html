@@ -70,6 +70,11 @@
 				controls.maxDistance = 500
 				controls.maxPolarAngle = Math.PI / 2;
 
+				var sun = initSphereMesh(0x00ff00);
+				sun.position.set(0,10,0);
+				sun.position.y = 10;
+				sun.position.z = 0;
+
 				var star_geometry = new THREE.SphereGeometry(1, 8, 6);
 				var star_material = new THREE.MeshBasicMaterial( { color: 0xffffe6, flatShading: true } );
 
@@ -107,6 +112,16 @@
 				scene.add( light );
 
 				window.addEventListener( 'resize', onWindowResize, false );
+			}
+
+			function initSphereMesh(color){
+				var sun_geometry = new THREE.SphereGeometry(40, 40, 40);
+				var sun_material = new THREE.MeshLambertMaterial( { color: 0xffffe6, flatShading: true } );
+				var mesh = new THREE.Mesh(sun_geometry,sun_material);
+				mesh.castShadow = true;
+				scene.add(mesh);
+				return mesh;
+
 			}
 
 			function initRenderer(){
