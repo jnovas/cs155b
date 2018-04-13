@@ -45,7 +45,7 @@
 			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 			var camera, controls, scene, renderer;
 			var clock;
-			var sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune;
+			var sun, mercury, venus, earth, mars, jupiter, saturn, rings, uranus, neptune; // 1. Creating outerspace through the dome option: added the variable "space"
 
 
 			init();
@@ -58,7 +58,7 @@
 				initRenderer();
 				initCamera();
 				initControls();
-				initBackground();
+				initBackground(); // 2. Creating outerspace through the dome option: remove "initBackground();"
 				initPlanets();
 				initStarField();
 				initLights();
@@ -83,32 +83,32 @@
 			}
 
 			function initPlanets(){
-				sun = createSunMesh(new THREE.SphereGeometry(5, 40, 40));
+				sun = createSunMesh(new THREE.SphereGeometry(69.55/4, 40, 40));
 				sun.position.set(0,0,0);
-				sun.add(createSunGlow());
+				sun.add(createSunGlow()); //need to expand the glow
 				scene.add(sun);
 
-				mercury = createMercuryMesh(new THREE.SphereGeometry(1, 40, 40));
+		// 3. Creating outerspace through the dome option
+				// space = createOuterSpace('starry-deep-outer-space-galaxy.jpg');
+				// scene.add(space);
+
+		mercury = createMercuryMesh(new THREE.SphereGeometry(.24*2, 40, 40));
 				scene.add(mercury);
-        venus = createVenusMesh(new THREE.SphereGeometry(1.5, 40, 40));
+        venus = createVenusMesh(new THREE.SphereGeometry(.61*2, 40, 40));
 				scene.add(venus);
-        earth = createEarthMesh(new THREE.SphereGeometry(2, 40, 40));
+        earth = createEarthMesh(new THREE.SphereGeometry(.64*2, 40, 40));
 				scene.add(earth);
-        mars = createMarsMesh(new THREE.SphereGeometry(2, 40, 40));
+        mars = createMarsMesh(new THREE.SphereGeometry(.34*2, 40, 40));
 				scene.add(mars);
-        jupiter = createJupiterMesh(new THREE.SphereGeometry(5, 40, 40));
+        jupiter = createJupiterMesh(new THREE.SphereGeometry(6.99, 40, 40));
 				scene.add(jupiter);
-        saturn = createSaturnMesh(new THREE.SphereGeometry(4, 40, 40));
+        saturn = createSaturnMesh(new THREE.SphereGeometry(5.82, 40, 40));
 				scene.add(saturn);
-       	// var rings = createRings(new THREE.CylinderGeometry( 10, 10, .1, 100 ));
-       	// rings.position.x = 110;
-        // rings.position.z = -100;
-       	// rings.rotation.x = Math.PI/(-30) ;
-       	// rings.rotation.z = Math.PI/(10) ;
-				// scene.add(rings);
-        uranus = createUranusMesh(new THREE.SphereGeometry(5, 40, 40));
+       	rings = createRings(new THREE.CylinderGeometry(13.82, 13.82, .1, 100));
+		       	scene.add(rings);
+        uranus = createUranusMesh(new THREE.SphereGeometry(2.54, 40, 40));
 				scene.add(uranus);
-        neptune = createNeptuneMesh(new THREE.SphereGeometry(5, 40, 40));
+        neptune = createNeptuneMesh(new THREE.SphereGeometry(2.46, 40, 40));
 				scene.add(neptune);
 			}
 
@@ -144,6 +144,24 @@
 				var light3 = new THREE.AmbientLight( 0x222222 );
 				scene.add( light3 );
 			}
+
+// 4. Creating outerspace through the dome option
+			// function createOuterSpace(image, k) {
+
+					// var geometry = new THREE.SphereGeometry( 500, 100, 100 );
+					// var texture = new THREE.TextureLoader().load( '/images/'+image );
+					// // texture.wrapS = THREE.RepeatWrapping;
+					// // texture.wrapT = THREE.RepeatWrapping;
+					// // texture.repeat.set( k, k );
+					// var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture ,side:THREE.DoubleSide} );
+					// //var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
+					// //var mesh = new THREE.Mesh( geometry, material );
+					// var mesh = new THREE.Mesh( geometry, material, 0 );
+
+					// mesh.receiveShadow = false;
+					// return mesh
+			//}
+
 			function createMarsMesh(geom) {
 					var planetTexture = THREE.ImageUtils.loadTexture("../mars.jpg");
 					var planetMaterial = new THREE.MeshPhongMaterial();
@@ -172,7 +190,7 @@
 					blending: THREE.AdditiveBlending
 				})
 				var sprite = new THREE.Sprite(spriteMaterial);
-				sprite.scale.set(50,50,1);
+				sprite.scale.set(300,300,1);
 				return sprite;
 	}
 
@@ -223,9 +241,9 @@
 			}
 
 			function createRings(geom) {
-		var ringsTexture = THREE.ImageUtils.loadTexture("../saturn rings.jpg");
-		ringsTexture.wrapS = THREE.RepeatWrapping;
-		ringsTexture.repeat.set( 1, 1 );
+					var ringsTexture = THREE.ImageUtils.loadTexture("../saturn rings.jpg");
+					ringsTexture.wrapS = THREE.RepeatWrapping;
+					ringsTexture.repeat.set( 1, 1 );
 					var ringsMaterial = new THREE.MeshPhongMaterial();
 					ringsMaterial.map = ringsTexture;
 					// create a multimaterial
@@ -307,29 +325,34 @@
 				controls.update(delta);
 
 				// Mercury
-				mercury.position.x = Math.sin( Date.now() * 0.00047 ) * 20.15;
-				mercury.position.z = Math.cos( Date.now() * 0.00047 ) * 20.15;
+				mercury.position.x = Math.sin( Date.now() * 0.00047 ) * 75.34/2;
+				mercury.position.z = Math.cos( Date.now() * 0.00047 ) * 75.34/2;
 				// Venus
-				venus.position.x = Math.sin( Date.now() * 0.00035 ) * 30.15;
-				venus.position.z = Math.cos( Date.now() * 0.00035 ) * 30.15;
+				venus.position.x = Math.sin( Date.now() * 0.00035 ) * 80.37/2;
+				venus.position.z = Math.cos( Date.now() * 0.00035 ) * 80.37/2;
 				// Earth
-				earth.position.x = Math.sin( Date.now() * 0.00029 ) * 45.15;
-				earth.position.z = Math.cos( Date.now() * 0.00029 ) * 45.15;
+				earth.position.x = Math.sin( Date.now() * 0.00029 ) * 84.51/2;
+				earth.position.z = Math.cos( Date.now() * 0.00029 ) * 84.51/2;
 				// Mars
-				mars.position.x = Math.sin( Date.now() * 0.00024 ) * 60.15;
-				mars.position.z = Math.cos( Date.now() * 0.00024 ) * 60.15;
+				mars.position.x = Math.sin( Date.now() * 0.00024 ) * 92.34/2;
+				mars.position.z = Math.cos( Date.now() * 0.00024 ) * 92.34/2;
 				// Jupiter
-				jupiter.position.x = Math.sin( Date.now() * 0.00013 ) * 75.15;
-				jupiter.position.z = Math.cos( Date.now() * 0.00013 ) * 75.15;
+				jupiter.position.x = Math.sin( Date.now() * 0.00013 ) * 147.38/2;
+				jupiter.position.z = Math.cos( Date.now() * 0.00013 ) * 147.38/2;
 				// Saturn
-				saturn.position.x = Math.sin( Date.now() * 0.0009 ) * 90.15;
-				saturn.position.z = Math.cos( Date.now() * 0.0009 ) * 90.15;
+				saturn.position.x = Math.sin( Date.now() * 0.0009 ) * 212.25/2;
+				saturn.position.z = Math.cos( Date.now() * 0.0009 ) * 212.25/2;
+				//Rings
+				rings.position.x = Math.sin( Date.now() * 0.0009 ) * 212.25/2;
+		        rings.position.z = Math.cos( Date.now() * 0.0009 ) * 212.25/2;
+				rings.rotation.x = Math.PI/(-30) ;
+       			rings.rotation.z = Math.PI/(10) ;
 				// Uranus
-				uranus.position.x = Math.sin( Date.now() * 0.0006 ) * 105.15;
-				uranus.position.z = Math.cos( Date.now() * 0.0006 ) * 105.15;
+				uranus.position.x = Math.sin( Date.now() * 0.0006 ) * 356.65/2;
+				uranus.position.z = Math.cos( Date.now() * 0.0006 ) * 356.65/2;
 				// Neptune
-				neptune.position.x = Math.sin( Date.now() * 0.0005 ) * 120.15;
-				neptune.position.z = Math.cos( Date.now() * 0.0005 ) * 120.15;
+				neptune.position.x = Math.sin( Date.now() * 0.0005 ) * 519.26/2;
+				neptune.position.z = Math.cos( Date.now() * 0.0005 ) * 519.26/2;
 
 
 				renderer.render( scene, camera );
