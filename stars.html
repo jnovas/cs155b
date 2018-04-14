@@ -32,6 +32,7 @@
 		<script src="three.js"></script>
 		<script src="OrbitControls.js"></script>
 		<script src="Detector.js"></script>
+		<script src="dat.gui.min.js"></script>
 		<script src="threex.dilategeometry.js"></script>
 		<script src="threex.atmospherematerial.js"></script>
 		<script src="threex.geometricglowmesh.js"></script>
@@ -43,10 +44,18 @@
 		<script>
 
 			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
-			var camera, controls, scene, renderer;
+			var controls, scene, renderer;
+			var solarCam,mercuryCam, venusCam, earthCam, marsCam, jupiterCam, saturnCam, uranusCam, neptuneCam;
 			var clock;
 			var sun, mercury, venus, earth, mars, jupiter, saturn, rings, uranus, neptune; // 1. Creating outerspace through the dome option: added the variable "space"
 
+			// var controls = new Controller();
+
+			var camControls = new function() {
+					this.camera = "Solar View";
+			}
+			var gui = new dat.GUI();
+			gui.add(camControls, 'camera',['Solar View','Mercury','Venus','Earth','Mars','Jupiter','Saturn','Uranus','Neptune']);
 
 			init();
 		//	render(); // remove when using next line for animation loop (requestAnimationFrame)
@@ -56,10 +65,11 @@
 			function init() {
 				initScene();
 				initRenderer();
-				initCamera();
+				initSolarCam();
 				initControls();
-				initBackground(); // 2. Creating outerspace through the dome option: remove "initBackground();"
+				// initBackground(); // 2. Creating outerspace through the dome option: remove "initBackground();"
 				initPlanets();
+				initPlanetCams();
 				initStarField();
 				initLights();
 
@@ -105,7 +115,7 @@
         saturn = createSaturnMesh(new THREE.SphereGeometry(5.82, 40, 40));
 				scene.add(saturn);
        	rings = createRings(new THREE.CylinderGeometry(13.82, 13.82, .1, 100));
-		       	scene.add(rings);
+		    scene.add(rings);
         uranus = createUranusMesh(new THREE.SphereGeometry(2.54, 40, 40));
 				scene.add(uranus);
         neptune = createNeptuneMesh(new THREE.SphereGeometry(2.46, 40, 40));
@@ -113,10 +123,10 @@
 			}
 
 			function initStarField(){
-				var star_geometry = new THREE.SphereGeometry(1, 8, 6);
+				var star_geometry = new THREE.SphereGeometry(0.25, 8, 6);
 				var star_material = new THREE.MeshBasicMaterial( { color: 0xffffe6, flatShading: true } );
 
-				for ( var i = 0; i < 500; i ++ ) {
+				for ( var i = 0; i < 5000; i ++ ) {
 				  var mesh = new THREE.Mesh(star_geometry, star_material);
 				  // var glowMesh	= new THREEx.GeometricGlowMesh(mesh); mesh.add(glowMesh.object3d);
 				  // var insideUniforms	= glowMesh.insideMesh.material.uniforms
@@ -135,13 +145,20 @@
 
 			function initLights() {
 				// lights
-				var light1 = new THREE.DirectionalLight( 0xffffff );
-				light1.position.set( 1, 1, 1 );
-				scene.add( light1 );
-				var light2 = new THREE.DirectionalLight( 0x002288 );
-				light2.position.set( -1, -1, -1 );
-				scene.add( light2 );
-				var light3 = new THREE.AmbientLight( 0x222222 );
+				// var light1 = new THREE.DirectionalLight( 0xffffff );
+				// light1.position.set( 50,50,50 );
+				// scene.add( light1 );
+				// var helper1 = new THREE.DirectionalLightHelper(light1);
+				// scene.add(helper1);
+				// var light2 = new THREE.DirectionalLight( 0xffffff );
+				// light2.position.set( -50,-50,-50 );
+				// scene.add( light2 );
+				// var helper2 = new THREE.DirectionalLightHelper(light2,5);
+				// scene.add(helper2);
+				// var light3 = new THREE.DirectionalLight( 0x002288 );
+				// light3.position.set( -1, -1, 1 );
+				// scene.add( light3 );
+				var light3 = new THREE.AmbientLight( 0xffffff );
 				scene.add( light3 );
 			}
 
@@ -190,7 +207,7 @@
 					blending: THREE.AdditiveBlending
 				})
 				var sprite = new THREE.Sprite(spriteMaterial);
-				sprite.scale.set(300,300,1);
+				sprite.scale.set(100,100,1);
 				return sprite;
 	}
 
@@ -285,17 +302,51 @@
 				// scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
 			}
 
-			function initCamera() {
-				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
-				camera.position.x = -10;
-        camera.position.y = 15;
-        camera.position.z = 25;
-
-        camera.lookAt(new THREE.Vector3(0, 0, 0));
+			function initSolarCam() {
+				solarCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
+				solarCam.position.x = -10;
+        solarCam.position.y = 15;
+        solarCam.position.z = 100;
+        solarCam.lookAt(new THREE.Vector3(0, 0, 0));
 			}
 
+			function initPlanetCams() {
+				mercuryCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
+				mercury.add(mercuryCam);
+				mercuryCam.translateZ(3);
+
+				venusCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
+				venus.add(venusCam);
+				venusCam.translateZ(3);
+
+				earthCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
+				earth.add(earthCam);
+				earthCam.translateZ(3);
+
+				marsCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
+				mars.add(marsCam);
+				marsCam.translateZ(3);
+
+				jupiterCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
+				jupiter.add(jupiterCam);
+				jupiterCam.translateZ(20);
+
+				saturnCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
+				saturn.add(saturnCam);
+				saturnCam.translateZ(25);
+
+				uranusCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
+				uranus.add(uranusCam);
+				uranusCam.translateZ(8);
+
+				neptuneCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
+				neptune.add(neptuneCam);
+				neptuneCam.translateZ(8);
+			}
+
+
 			function initControls(){
-				controls = new THREE.OrbitControls( camera, renderer.domElement );
+				controls = new THREE.OrbitControls( solarCam, renderer.domElement );
 				controls.enableZoom = false;
 
 				controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
@@ -303,7 +354,7 @@
 
 				controls.panningMode = THREE.HorizontalPanning; // default is THREE.ScreenSpacePanning
 
-				controls.minDistance = 100;
+				controls.minDistance = 10;
 				controls.maxDistance = 500
 				controls.maxPolarAngle = Math.PI / 2;
 
@@ -312,8 +363,8 @@
 			}
 
 			function onWindowResize() {
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
+				solarCam.aspect = window.innerWidth / window.innerHeight;
+				solarCam.updateProjectionMatrix();
 				renderer.setSize( window.innerWidth, window.innerHeight );
 			}
 
@@ -327,36 +378,70 @@
 				// Mercury
 				mercury.position.x = Math.sin( Date.now() * 0.00047 ) * 75.34/2;
 				mercury.position.z = Math.cos( Date.now() * 0.00047 ) * 75.34/2;
+				mercury.rotateY(0.005);
 				// Venus
 				venus.position.x = Math.sin( Date.now() * 0.00035 ) * 80.37/2;
 				venus.position.z = Math.cos( Date.now() * 0.00035 ) * 80.37/2;
+				venus.rotateY(0.005);
 				// Earth
 				earth.position.x = Math.sin( Date.now() * 0.00029 ) * 84.51/2;
 				earth.position.z = Math.cos( Date.now() * 0.00029 ) * 84.51/2;
+				earth.rotateY(0.005);
 				// Mars
 				mars.position.x = Math.sin( Date.now() * 0.00024 ) * 92.34/2;
 				mars.position.z = Math.cos( Date.now() * 0.00024 ) * 92.34/2;
+				mars.rotateY(0.005);
 				// Jupiter
 				jupiter.position.x = Math.sin( Date.now() * 0.00013 ) * 147.38/2;
 				jupiter.position.z = Math.cos( Date.now() * 0.00013 ) * 147.38/2;
+				jupiter.rotateY(0.005);
 				// Saturn
 				saturn.position.x = Math.sin( Date.now() * 0.0009 ) * 212.25/2;
 				saturn.position.z = Math.cos( Date.now() * 0.0009 ) * 212.25/2;
+				saturn.rotateY(0.005);
 				//Rings
 				rings.position.x = Math.sin( Date.now() * 0.0009 ) * 212.25/2;
-		        rings.position.z = Math.cos( Date.now() * 0.0009 ) * 212.25/2;
+		    rings.position.z = Math.cos( Date.now() * 0.0009 ) * 212.25/2;
 				rings.rotation.x = Math.PI/(-30) ;
-       			rings.rotation.z = Math.PI/(10) ;
+       	rings.rotation.z = Math.PI/(10) ;
 				// Uranus
 				uranus.position.x = Math.sin( Date.now() * 0.0006 ) * 356.65/2;
 				uranus.position.z = Math.cos( Date.now() * 0.0006 ) * 356.65/2;
+				uranus.rotateY(0.005);
 				// Neptune
 				neptune.position.x = Math.sin( Date.now() * 0.0005 ) * 519.26/2;
 				neptune.position.z = Math.cos( Date.now() * 0.0005 ) * 519.26/2;
+				neptune.rotateY(0.005);
 
-
-				renderer.render( scene, camera );
-
+				switch(camControls.camera){
+					case 'Solar View':
+						renderer.render( scene, solarCam );
+						break;
+					case 'Mercury':
+						renderer.render(scene, mercuryCam);
+						break;
+					case 'Venus':
+						renderer.render(scene, venusCam);
+						break;
+					case 'Earth':
+						renderer.render(scene, earthCam);
+						break;
+					case 'Mars':
+						renderer.render(scene, marsCam);
+						break;
+					case 'Jupiter':
+						renderer.render(scene, jupiterCam);
+						break;
+					case 'Saturn':
+						renderer.render(scene, saturnCam);
+						break;
+					case 'Uranus':
+						renderer.render(scene, uranusCam);
+						break;
+					case 'Neptune':
+						renderer.render(scene, neptuneCam);
+						break;
+				}
 			}
 
 
