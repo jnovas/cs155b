@@ -262,8 +262,9 @@
 
 			function initPlanetCams() {
 				mercuryCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
-				mercury.add(mercuryCam);
-				mercuryCam.translateZ(3);
+				scene.add(mercuryCam);
+				// mercury.add(mercuryCam);
+				// mercuryCam.translateZ(3);
 
 				venusCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
 				venus.add(venusCam);
@@ -368,6 +369,9 @@
 						renderer.render( scene, solarCam );
 						break;
 					case 'Mercury':
+						mercuryCam.position.x = Math.sin( Date.now() * 0.000047 ) * (mercuryRadius+3);
+						mercuryCam.position.z = Math.cos( Date.now() * 0.000047 ) * (mercuryRadius+3);
+						mercuryCam.lookAt(new THREE.Vector3(mercury.position.x, mercury.position.y,mercury.position.z));
 						renderer.render(scene, mercuryCam);
 						break;
 					case 'Venus':
