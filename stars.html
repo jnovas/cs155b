@@ -348,6 +348,21 @@
 				clock = new THREE.Clock();
 				clock.start;
 			}
+			// Sound Player V1.
+			// Sound looping.
+			myAudio = new Audio('SoundTrack01.mp3');
+			if (typeof myAudio.loop == 'boolean')
+			{
+					myAudio.loop = true;
+			}
+			else
+			{
+					myAudio.addEventListener('ended', function() {
+							this.currentTime = 0;
+							this.play();
+					}, false);
+			}
+			myAudio.play();
 
 			function onWindowResize() {
 				solarCam.aspect = window.innerWidth / window.innerHeight;
