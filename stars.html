@@ -46,8 +46,10 @@
 			var solarCam,mercuryCam, venusCam, earthCam, marsCam, jupiterCam, saturnCam, uranusCam, neptuneCam;
 			var clock;
 			var sun, mercury, venus, earth, mars, jupiter, saturn, rings, uranus, neptune; // 1. Creating outerspace through the dome option: added the variable "space"
-			var mercTextPlane;
+			var mercTextPlane, venusTextPlane, earthTextPlane, marsTextPlane, jupTextPlane, satTextPlane, urTextPlane, neptTextPlane;
 			var startScene, startCam, startLight;
+			var previousTextPlane, previousCamObject;
+			var previousCam = 'Solar View';
 
 			// Radii
 			var mercuryOrbitRadius = 75.34/2;
@@ -67,7 +69,6 @@
 			gui.add(camControls, 'camera',['Solar View','Mercury','Venus','Earth','Mars','Jupiter','Saturn','Uranus','Neptune']);
 
 			init();
-		//	render(); // remove when using next line for animation loop (requestAnimationFrame)
 			animate();
 
 			function init() {
@@ -76,7 +77,6 @@
 				initRenderer();
 				initSolarCam();
 				initControls();
-				// initBackground(); // 2. Creating outerspace through the dome option: remove "initBackground();"
 				initPlanetCams();
 				initPlanets();
 				initPlanetPaths();
@@ -84,7 +84,6 @@
 				initStarField();
 				initLights();
 
-				// Not sure what to do with this
 				var container = document.getElementById( 'container' );
 				container.appendChild( renderer.domElement );
 				window.addEventListener( 'resize', onWindowResize, false );
@@ -110,24 +109,17 @@
 			// 	startCam.lookAt(new THREE.Vector3(0,0,0));
 			// }
 
-			function initBackground(){
-				var materialColor = new THREE.MeshBasicMaterial({
-						map: THREE.ImageUtils.loadTexture("../starry-deep-outer-space-galaxy.jpg"),
-						depthTest: false
-				});
-				var bgPlane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), materialColor);
-				bgPlane.position.z = -100;
-				bgPlane.scale.set(window.innerWidth * 2, window.innerHeight * 2, 1);
-				scene.add(bgPlane);
-			}
-
 			function initPlanetInfo() {
-				var geometry = new THREE.PlaneGeometry( 0.5, 1, 32 );
-				var material = new THREE.MeshBasicMaterial( {color: 0xffffff, side: THREE.DoubleSide} );
-				var plane = new THREE.Mesh( geometry, material );
-				mercuryCam.add( plane );
-				plane.translateZ(-1.5);
-				plane.translateX(1.25);
+				var material = new THREE.MeshBasicMaterial( {color: 0x00ffff, side: THREE.DoubleSide} );
+				mercTextPlane = new THREE.Mesh( new THREE.PlaneGeometry( 0.5, 1, 32 ), material );
+				venusTextPlane = new THREE.Mesh( new THREE.PlaneGeometry( 0.5, 1, 32 ), material );
+				earthTextPlane = new THREE.Mesh( new THREE.PlaneGeometry( 0.5, 1, 32 ), material );
+				marsTextPlane = new THREE.Mesh( new THREE.PlaneGeometry( 0.5, 1, 32 ), material );
+				jupTextPlane = new THREE.Mesh( new THREE.PlaneGeometry( 0.5, 1, 32 ), material );
+				satTextPlane = new THREE.Mesh( new THREE.PlaneGeometry( 0.5, 1, 32 ), material );
+				urTextPlane = new THREE.Mesh( new THREE.PlaneGeometry( 0.5, 1, 32 ), material );
+				neptTextPlane = new THREE.Mesh( new THREE.PlaneGeometry( 0.5, 1, 32 ), material );
+
 			}
 
 			function initPlanets(){
@@ -162,12 +154,6 @@
 
 				for ( var i = 0; i < 5000; i ++ ) {
 				  var mesh = new THREE.Mesh(star_geometry, star_material);
-				  // var glowMesh	= new THREEx.GeometricGlowMesh(mesh); mesh.add(glowMesh.object3d);
-				  // var insideUniforms	= glowMesh.insideMesh.material.uniforms
-				  // insideUniforms.glowColor.value.set('white')
-				  // var outsideUniforms	= glowMesh.outsideMesh.material.uniforms
-				  // outsideUniforms.glowColor.value.set('white')
-				  // mesh.add(glowMesh);
 					mesh.position.x = ( Math.random() - 0.5 ) * 1000;
 					mesh.position.y = ( Math.random() - 0.5 ) * 1000;
 					mesh.position.z = ( Math.random() - 0.5 ) * 1000;
@@ -199,39 +185,9 @@
 
 			function initLights() {
 				// lights
-				// var light1 = new THREE.DirectionalLight( 0xffffff );
-				// light1.position.set( 50,50,50 );
-				// scene.add( light1 );
-				// var helper1 = new THREE.DirectionalLightHelper(light1);
-				// scene.add(helper1);
-				// var light2 = new THREE.DirectionalLight( 0xffffff );
-				// light2.position.set( -50,-50,-50 );
-				// scene.add( light2 );
-				// var helper2 = new THREE.DirectionalLightHelper(light2,5);
-				// scene.add(helper2);
-				// var light3 = new THREE.DirectionalLight( 0x002288 );
-				// light3.position.set( -1, -1, 1 );
-				// scene.add( light3 );
-				var light3 = new THREE.AmbientLight( 0xffffff );
-				scene.add( light3 );
+				var light = new THREE.AmbientLight( 0xffffff );
+				scene.add( light );
 			}
-
-// 4. Creating outerspace through the dome option
-			// function createOuterSpace(image, k) {
-
-					// var geometry = new THREE.SphereGeometry( 500, 100, 100 );
-					// var texture = new THREE.TextureLoader().load( '/images/'+image );
-					// // texture.wrapS = THREE.RepeatWrapping;
-					// // texture.wrapT = THREE.RepeatWrapping;
-					// // texture.repeat.set( k, k );
-					// var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture ,side:THREE.DoubleSide} );
-					// //var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
-					// //var mesh = new THREE.Mesh( geometry, material );
-					// var mesh = new THREE.Mesh( geometry, material, 0 );
-
-					// mesh.receiveShadow = false;
-					// return mesh
-			//}
 
 			function createPlanetMesh(path, geom) {
 				var planetTexture = THREE.ImageUtils.loadTexture(path);
@@ -286,51 +242,27 @@
         solarCam.position.y = 15;
         solarCam.position.z = 100;
         solarCam.lookAt(new THREE.Vector3(0, 0, 0));
+				previousCamObject = solarCam
 			}
 
 			function initPlanetCams() {
 				mercuryCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
 				scene.add(mercuryCam);
-				// mercury.add(mercuryCam);
-				// mercuryCam.translateZ(3);
-
 				venusCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
 				scene.add(venusCam);
-				// venus.add(venusCam);
-				// venusCam.translateZ(3);
-
 				earthCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
-				// earth.add(earthCam);
-				// earthCam.translateZ(3);
 				scene.add(earthCam);
-
 				marsCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
-				// mars.add(marsCam);
-				// marsCam.translateZ(3);
 				scene.add(marsCam);
-
 				jupiterCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
-				// jupiter.add(jupiterCam);
-				// jupiterCam.translateZ(20);
 				scene.add(jupiterCam);
-
 				saturnCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
-				// saturn.add(saturnCam);
-				// saturnCam.translateZ(25);
 				scene.add(saturnCam);
-
 				uranusCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
-				// uranus.add(uranusCam);
-				// uranusCam.translateZ(8);
 				scene.add(uranusCam);
-
 				neptuneCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
-				// neptune.add(neptuneCam);
-				// neptuneCam.translateZ(8);
 				scene.add(neptuneCam);
-
 			}
-
 
 			function initControls(){
 				controls = new THREE.OrbitControls( solarCam, renderer.domElement );
@@ -370,6 +302,7 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 			}
 
+			var currentPlane;
 			function animate() {
 				requestAnimationFrame( animate );
 				controls.update();
@@ -417,6 +350,7 @@
 					neptune.position.z = Math.cos( Date.now() * 0.00005 ) * neptuneOrbitRadius;
 					neptune.rotateY(0.002);
 
+					removePlanes(previousCam, previousTextPlane, previousCamObject);
 					switch(camControls.camera){
 						case 'Solar View':
 							renderer.render( scene, solarCam );
@@ -425,56 +359,106 @@
 							mercuryCam.position.x = Math.sin( Date.now() * 0.000047 ) * (mercuryOrbitRadius+1.5);
 							mercuryCam.position.z = Math.cos( Date.now() * 0.000047 ) * (mercuryOrbitRadius+1.5);
 							mercuryCam.lookAt(new THREE.Vector3(mercury.position.x, mercury.position.y,mercury.position.z));
+							addCam(mercuryCam, mercTextPlane, 1.25,0,-1.5);
+							previousTextPlane = mercTextPlane;
+							previousCamObject = mercuryCam;
 							renderer.render(scene, mercuryCam);
 							break;
 						case 'Venus':
 							venusCam.position.x = Math.sin( Date.now() * 0.000035 ) * (venusOrbitRadius+4);
 							venusCam.position.z = Math.cos( Date.now() * 0.000035 ) * (venusOrbitRadius+4);
 							venusCam.lookAt(new THREE.Vector3(venus.position.x, venus.position.y, venus.position.z));
+
+							addCam(venusCam, venusTextPlane, 1.25,0,-1.5);
+							previousTextPlane = venusTextPlane;
+							previousCamObject = venusCam;
+
 							renderer.render(scene, venusCam);
 							break;
 						case 'Earth':
 							earthCam.position.x = Math.sin( Date.now() * 0.000029 ) * (earthOrbitRadius+4);
 							earthCam.position.z = Math.cos( Date.now() * 0.000029 ) * (earthOrbitRadius+4);
 							earthCam.lookAt(new THREE.Vector3(earth.position.x, earth.position.y,earth.position.z));
+
+							addCam(earthCam, earthTextPlane, 1.25,0,-1.5);
+							previousTextPlane = earthTextPlane;
+							previousCamObject = earthCam;
+
 							renderer.render(scene, earthCam);
 							break;
 						case 'Mars':
 							marsCam.position.x = Math.sin( Date.now() * 0.000024 ) * (marsOrbitRadius+2.5);
 							marsCam.position.z = Math.cos( Date.now() * 0.000024 ) * (marsOrbitRadius+2.5);
 							marsCam.lookAt(new THREE.Vector3(mars.position.x, mars.position.y,mars.position.z));
+
+							addCam(marsCam, marsTextPlane, 1.25,0,-1.5);
+							previousTextPlane = marsTextPlane;
+							previousCamObject = marsCam;
+
 							renderer.render(scene, marsCam);
 							break;
 						case 'Jupiter':
 							jupiterCam.position.x = Math.sin( Date.now() * 0.000013 ) * (jupiterOrbitRadius+20);
 							jupiterCam.position.z = Math.cos( Date.now() * 0.000013 ) * (jupiterOrbitRadius+20);
 							jupiterCam.lookAt(new THREE.Vector3(jupiter.position.x, jupiter.position.y,jupiter.position.z));
+
+							addCam(jupiterCam, jupTextPlane, 1.25,0,-1.5);
+							previousTextPlane = jupTextPlane;
+							previousCamObject = jupiterCam;
+
 							renderer.render(scene, jupiterCam);
 							break;
 						case 'Saturn':
 							saturnCam.position.x = Math.sin( Date.now() * 0.00009 ) * (saturnOrbitRadius+25);
 							saturnCam.position.z = Math.cos( Date.now() * 0.00009 ) * (saturnOrbitRadius+25);
 							saturnCam.lookAt(new THREE.Vector3(saturn.position.x, saturn.position.y,saturn.position.z));
+
+							addCam(saturnCam, satTextPlane, 1.25,0,-1.5);
+							previousTextPlane = satTextPlane;
+							previousCamObject = saturnCam;
+
 							renderer.render(scene, saturnCam);
 							break;
 						case 'Uranus':
 							uranusCam.position.x = Math.sin( Date.now() * 0.00006 ) * (uranusOrbitRadius+8);
 							uranusCam.position.z = Math.cos( Date.now() * 0.00006 ) * (uranusOrbitRadius+8);
 							uranusCam.lookAt(new THREE.Vector3(uranus.position.x, uranus.position.y,uranus.position.z));
+
+							addCam(uranusCam, urTextPlane, 1.25,0,-1.5);
+							previousTextPlane = urTextPlane;
+							previousCamObject = uranusCam;
+
 							renderer.render(scene, uranusCam);
 							break;
 						case 'Neptune':
 							neptuneCam.position.x = Math.sin( Date.now() * 0.00005 ) * (neptuneOrbitRadius+8);
 							neptuneCam.position.z = Math.cos( Date.now() * 0.00005 ) * (neptuneOrbitRadius+8);
 							neptuneCam.lookAt(new THREE.Vector3(neptune.position.x, neptune.position.y, neptune.position.z));
+
+							addCam(neptuneCam, neptTextPlane, 1.25,0,-1.5);
+							previousTextPlane = neptTextPlane;
+							previousCamObject = neptuneCam;
+
 							renderer.render(scene, neptuneCam);
 							break;
 					}
+					previousCam = camControls.camera;
 				// } else {
 				// 	startLight.intensity = elapsedTime/5;
 				// 	console.log(startLight.intensity);
 				// 	renderer.render(startScene, startCam);
 				// }
+			}
+
+			function addCam(cam, textPlane, x,y,z) {
+				cam.add( textPlane );
+				textPlane.position.set(x,y,z);
+			}
+
+			function removePlanes (previousCam, previousTextPlane, previousCamObject) {
+				if(previousCam != camControls.camera){
+					previousCamObject.remove(previousTextPlane);
+				}
 			}
 
 
